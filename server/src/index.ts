@@ -56,8 +56,14 @@ app.use(express.json({ limit: '50kb' }));
 app.use('/api', apiRouter);
 
 // Serve built frontend in production if dist directory exists
-const clientDistPath = path.resolve(__dirname, '../../client/dist');
-if (fs.existsSync(clientDistPath)) {
+const candidatePaths = [
+  path.resolve(__dirname, '../../client/dist'),
+  path.resolve(__dirname, '../client/dist'),
+  path.resolve(process.cwd(), 'client/dist'),
+];
+const clientDistPath = candidatePaths.find(p => fs.existsSync(p));
+if (clientDistPath) {
+  console.log(`[SAMVADA] Serving static frontend from: ${clientDistPath}`);
   app.use(express.static(clientDistPath));
   app.get('*', (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
@@ -65,6 +71,8 @@ if (fs.existsSync(clientDistPath)) {
     }
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
+} else {
+  console.warn('[SAMVADA] Notice: client/dist not found in candidate paths:', candidatePaths);
 }
 
 // Socket.IO Server

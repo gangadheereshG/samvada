@@ -7,13 +7,14 @@ class SocketService {
   getSocket(): Socket {
     if (!this.socket) {
       // Connect to window.location origin by default or custom configured VITE_SERVER_URL
-      const serverUrl = (import.meta as any).env?.VITE_SERVER_URL || undefined;
-      this.socket = io(serverUrl, {
+      const serverUrl = (import.meta as any).env?.VITE_SERVER_URL;
+      const opts = {
         autoConnect: true,
         reconnection: true,
         reconnectionAttempts: 10,
         reconnectionDelay: 1000,
-      });
+      };
+      this.socket = serverUrl ? io(serverUrl, opts) : io(opts);
 
       this.socket.on('connect', () => {
         console.log('[Socket] Connected with id:', this.socket?.id);
