@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { db } from '../db/pool.js';
 import { redisService } from '../redis/client.js';
 import { config } from '../config.js';
@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const apiRouter = Router();
 
 // Health Check
-apiRouter.get('/health', (req, res) => {
+apiRouter.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -20,7 +20,7 @@ apiRouter.get('/health', (req, res) => {
 });
 
 // RTC Configuration (IceServers STUN & TURN)
-apiRouter.get('/config/rtc', (req, res) => {
+apiRouter.get('/config/rtc', (req: Request, res: Response) => {
   const iceServers: RTCIceServer[] = [];
 
   // Add STUN servers
@@ -50,7 +50,7 @@ const reportSchema = z.object({
   matchId: z.string().optional(),
 });
 
-apiRouter.post('/report', async (req, res) => {
+apiRouter.post('/report', async (req: Request, res: Response) => {
   try {
     const parsed = reportSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -87,7 +87,7 @@ const blockSchema = z.object({
   matchId: z.string().optional(),
 });
 
-apiRouter.post('/block', async (req, res) => {
+apiRouter.post('/block', async (req: Request, res: Response) => {
   try {
     const parsed = blockSchema.safeParse(req.body);
     if (!parsed.success) {
