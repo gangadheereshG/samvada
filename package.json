@@ -1,0 +1,30 @@
+{
+  "name": "samvada",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SAMVADA - Genuine Real Human-to-Human Video and Text Chat Platform",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix shared run build && npm --prefix server run build && npm --prefix client run build",
+    "start": "npm --prefix server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "webrtc",
+    "socketio",
+    "chat",
+    "video-chat",
+    "matchmaking",
+    "realtime"
+  ],
+  "license": "MIT"
+}
